@@ -55,7 +55,7 @@ export function Header() {
             {/* Logo */}
             <a
               href="/"
-              className="font-heading font-bold text-xl md:text-2xl text-gray-900 shrink-0"
+              className={`font-heading font-bold text-xl md:text-2xl shrink-0 transition-colors duration-300 ${scrolled ? 'text-gray-900' : 'text-white'}`}
             >
               Window<span className="text-primary-600">ForLife</span>
             </a>
@@ -72,7 +72,7 @@ export function Header() {
                     'transition-colors duration-200',
                     scrolled
                       ? 'text-gray-600 hover:text-primary-600 hover:bg-primary-50'
-                      : 'text-gray-700 hover:text-primary-600 hover:bg-white/20',
+                      : 'text-white/90 hover:text-white hover:bg-white/20',
                   ].join(' ')}
                 >
                   {link.label}
@@ -89,7 +89,7 @@ export function Header() {
                   className={[
                     'flex items-center gap-1.5 font-body font-semibold text-sm',
                     'transition-colors duration-200',
-                    scrolled ? 'text-gray-700 hover:text-primary-600' : 'text-gray-700 hover:text-primary-600',
+                    scrolled ? 'text-gray-700 hover:text-primary-600' : 'text-white/90 hover:text-white',
                   ].join(' ')}
                 >
                   <Phone size={14} />
@@ -103,7 +103,7 @@ export function Header() {
 
             {/* Mobile burger */}
             <button
-              className="lg:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              className={`lg:hidden p-2 rounded-lg transition-colors ${scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-white/90 hover:text-white hover:bg-white/20'}`}
               onClick={() => setMobileOpen(true)}
               aria-label="Открыть меню"
             >
