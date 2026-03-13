@@ -1,0 +1,10 @@
+{
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
+  },
+  "permissions": {
+    "allow": [
+      "Bash(cd \"F:\\\\Projects\\\\Windowforlife_claude\" && npm install 2>&1)"
+    ]
+  }
+}

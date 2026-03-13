@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://windowforlife.ru/sitemap.xml
+
+# Block common bot traps
+Disallow: /api/

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="8" fill="#2563eb"/>
+  <!-- Window frame: outer -->
+  <rect x="6" y="6" width="20" height="20" rx="2" stroke="white" stroke-width="2" fill="none"/>
+  <!-- Window dividers -->
+  <line x1="16" y1="6" x2="16" y2="26" stroke="white" stroke-width="1.5"/>
+  <line x1="6" y1="16" x2="26" y2="16" stroke="white" stroke-width="1.5"/>
+  <!-- Glass panes (subtle fill) -->
+  <rect x="7.5" y="7.5" width="7.5" height="7.5" fill="white" fill-opacity="0.25"/>
+  <rect x="17" y="7.5" width="7.5" height="7.5" fill="white" fill-opacity="0.15"/>
+  <rect x="7.5" y="17" width="7.5" height="7.5" fill="white" fill-opacity="0.15"/>
+  <rect x="17" y="17" width="7.5" height="7.5" fill="white" fill-opacity="0.1"/>
+</svg>
