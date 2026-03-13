@@ -13,25 +13,8 @@ declare global {
 
 // Lazy load Yandex Maps only when contacts section is in view
 function YandexMap({ lat, lng }: { lat: string; lng: string }) {
-  const apiKey = import.meta.env.VITE_YANDEX_MAPS_API_KEY;
-
-  // If no API key provided — show placeholder
-  if (!apiKey || apiKey === 'placeholder_maps_key') {
-    return (
-      <div className="w-full h-full bg-gray-100 flex items-center justify-center rounded-2xl">
-        <div className="text-center text-gray-400">
-          <MapPin size={32} className="mx-auto mb-2 text-gray-300" />
-          <p className="font-body text-sm">Карта загружается...</p>
-          <p className="font-body text-xs mt-1 text-gray-300">
-            Укажите VITE_YANDEX_MAPS_API_KEY в .env
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Iframe embed approach (works without npm package issues)
-  const src = `https://api-maps.yandex.ru/services/constructor/1.0/static/?um=constructor%3A&width=100%25&height=400&lang=ru_RU&scroll=true&center=${lng}%2C${lat}&z=15&l=map&pt=${lng}%2C${lat}`;
+  // Yandex Maps widget iframe — works without API key on any domain
+  const src = `https://yandex.ru/map-widget/v1/?ll=${lng}%2C${lat}&z=17&pt=${lng}%2C${lat}%2Cpm2rdm&lang=ru_RU`;
 
   return (
     <iframe
