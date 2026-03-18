@@ -41,7 +41,7 @@ export function Contacts() {
       icon: Phone,
       label: 'Телефон',
       value: phone,
-      href: `tel:${phone.replace(/\s/g, '')}`,
+      href: `tel:${phone.replace(/[^\d+]/g, '')}`,
       onClick: () => reachGoal('phone_clicked'),
     },
     email && {
@@ -148,7 +148,7 @@ export function Contacts() {
             {/* Mobile call button */}
             {phone && (
               <a
-                href={`tel:${phone.replace(/\s/g, '')}`}
+                href={`tel:${phone.replace(/[^\d+]/g, '')}`}
                 onClick={() => reachGoal('phone_clicked')}
                 className="md:hidden flex items-center justify-center gap-2 py-4 rounded-2xl bg-primary-600 text-white font-body font-semibold text-base"
               >

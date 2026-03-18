@@ -16,15 +16,30 @@ async function request<T>(path: string, options: RequestInit): Promise<ApiRespon
   const base = '/api';
   const url = `${base}${path}`;
 
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+  } catch {
+    throw { success: false, message: 'Нет связи с сервером' } as ApiError;
+  }
 
-  const data = await response.json();
+  let data: unknown;
+  try {
+    data = await response.json();
+  } catch {
+    throw {
+      success: false,
+      message: response.ok
+        ? 'Некорректный ответ сервера'
+        : `Ошибка сервера (${response.status})`,
+    } as ApiError;
+  }
 
   if (!response.ok) {
     throw data as ApiError;

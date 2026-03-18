@@ -9,7 +9,7 @@ interface PrivacyModalProps {
 
 export function PrivacyModal({ isOpen, onClose }: PrivacyModalProps) {
   const company = 'WindowForLife';
-  const email = import.meta.env.VITE_COMPANY_EMAIL as string;
+  const email = import.meta.env.VITE_COMPANY_EMAIL || '';
 
   useEffect(() => {
     if (isOpen) {
@@ -56,11 +56,6 @@ export function PrivacyModal({ isOpen, onClose }: PrivacyModalProps) {
 
             {/* Content */}
             <div className="overflow-y-auto flex-1 px-6 md:px-8 py-6 font-body text-gray-600 text-sm leading-relaxed space-y-4">
-              {/* PLACEHOLDER: заменить на реальную политику конфиденциальности */}
-              <p className="text-xs text-gray-400 italic">
-                Шаблон политики конфиденциальности. Подлежит замене на актуальный документ.
-              </p>
-
               <p>
                 Настоящая Политика конфиденциальности определяет порядок обработки и защиты
                 персональных данных пользователей сайта {company} (windowforlife.ru).

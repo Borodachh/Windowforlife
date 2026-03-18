@@ -46,7 +46,7 @@ export function FAQ() {
 
               {phone && (
                 <a
-                  href={`tel:${phone.replace(/\s/g, '')}`}
+                  href={`tel:${phone.replace(/[^\d+]/g, '')}`}
                   onClick={() => reachGoal('phone_clicked')}
                   className="flex items-center gap-2 text-gray-500 hover:text-primary-600 font-body text-sm transition-colors w-fit"
                 >

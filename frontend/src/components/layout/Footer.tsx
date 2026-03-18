@@ -15,10 +15,10 @@ const navLinks = [
 
 export function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
-  const phone = import.meta.env.VITE_COMPANY_PHONE as string;
-  const email = import.meta.env.VITE_COMPANY_EMAIL as string;
-  const workHours = import.meta.env.VITE_COMPANY_WORK_HOURS as string;
-  const address = import.meta.env.VITE_COMPANY_ADDRESS as string;
+  const phone = import.meta.env.VITE_COMPANY_PHONE || '';
+  const email = import.meta.env.VITE_COMPANY_EMAIL || '';
+  const workHours = import.meta.env.VITE_COMPANY_WORK_HOURS || '';
+  const address = import.meta.env.VITE_COMPANY_ADDRESS || '';
   const year = new Date().getFullYear();
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -76,7 +76,7 @@ export function Footer() {
               <div className="flex flex-col gap-3">
                 {phone && (
                   <a
-                    href={`tel:${phone.replace(/\s/g, '')}`}
+                    href={`tel:${phone.replace(/[^\d+]/g, '')}`}
                     onClick={() => reachGoal('phone_clicked')}
                     className="flex items-center gap-2.5 text-gray-300 hover:text-white font-body text-sm transition-colors"
                   >

@@ -12,7 +12,7 @@ export function useSubmitOrder() {
   return useMutation({
     mutationFn: (data: OrderInput) =>
       api.post<SubmitOrderResponse>('/orders', data),
-    retry: 0,
+    retry: 1,
     onSuccess: () => {
       reachGoal('order_submitted');
     },

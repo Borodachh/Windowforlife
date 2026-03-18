@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Button } from '../ui/Button';
@@ -19,22 +20,35 @@ const navLinks = [
 ];
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  const phone = import.meta.env.VITE_COMPANY_PHONE as string;
+  const phone = import.meta.env.VITE_COMPANY_PHONE || '';
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
+    };
+  }, []);
+
+  const delayedAction = (fn: () => void) => {
+    const id = setTimeout(fn, 300);
+    timersRef.current.push(id);
+  };
 
   const handleNavClick = (href: string) => {
     onClose();
-    setTimeout(() => {
+    delayedAction(() => {
       const el = document.querySelector(href);
       el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 300);
+    });
   };
 
   const handleOrderClick = () => {
     onClose();
-    setTimeout(() => {
+    delayedAction(() => {
       scrollToOrderForm();
       reachGoal('order_form_opened');
-    }, 300);
+    });
   };
 
   return (
@@ -95,7 +109,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <div className="px-6 py-6 border-t border-gray-100 flex flex-col gap-3">
               {phone && (
                 <a
-                  href={`tel:${phone.replace(/\s/g, '')}`}
+                  href={`tel:${phone.replace(/[^\d+]/g, '')}`}
                   onClick={() => reachGoal('phone_clicked')}
                   className="block text-center py-3 font-body font-semibold text-primary-600 hover:text-primary-700 transition-colors"
                 >

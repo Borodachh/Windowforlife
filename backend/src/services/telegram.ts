@@ -59,13 +59,25 @@ function formatMessage(order: OrderInput): string {
     .join('\n');
 }
 
+const TELEGRAM_TIMEOUT = 10_000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`Telegram API не ответил за ${ms}мс`)), ms),
+    ),
+  ]);
+}
+
 export async function sendOrderNotification(order: OrderInput): Promise<void> {
   const message = formatMessage(order);
 
   try {
-    await getBot().sendMessage(env.TELEGRAM_CHAT_ID, message, {
-      parse_mode: 'HTML',
-    });
+    await withTimeout(
+      getBot().sendMessage(env.TELEGRAM_CHAT_ID, message, { parse_mode: 'HTML' }),
+      TELEGRAM_TIMEOUT,
+    );
   } catch (error) {
     console.error('Ошибка отправки в Telegram:', error);
     throw new Error('Не удалось отправить уведомление в Telegram');

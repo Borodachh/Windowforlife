@@ -18,7 +18,7 @@ const navLinks = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const phone = import.meta.env.VITE_COMPANY_PHONE as string;
+  const phone = import.meta.env.VITE_COMPANY_PHONE || '';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -84,7 +84,7 @@ export function Header() {
             <div className="hidden md:flex items-center gap-4">
               {phone && (
                 <a
-                  href={`tel:${phone.replace(/\s/g, '')}`}
+                  href={`tel:${phone.replace(/[^\d+]/g, '')}`}
                   onClick={() => reachGoal('phone_clicked')}
                   className={[
                     'flex items-center gap-1.5 font-body font-semibold text-sm',
