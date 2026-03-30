@@ -72,8 +72,7 @@ export const products: Product[] = [
       'Подходит для балконов и лоджий',
     ],
     constructionTypes: ['Раздвижная система', 'Остекление балкона', 'Остекление лоджии'],
-    imageUrl:
-      'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&q=80&fit=crop',
+    imageUrl: '/products/provedal-c640.jpg',
     imageAlt: 'Provedal C640 — раздвижное алюминиевое остекление балкона',
   },
   {
@@ -90,8 +89,7 @@ export const products: Product[] = [
       'Простота обслуживания',
     ],
     constructionTypes: ['Распашная система', 'Остекление балкона'],
-    imageUrl:
-      'https://images.unsplash.com/photo-1541123020-4fc0e06a8a6a?w=600&q=80&fit=crop',
+    imageUrl: '/products/provedal-p400.jpg',
     imageAlt: 'Provedal P400 — распашное алюминиевое остекление',
   },
   {
@@ -108,8 +106,7 @@ export const products: Product[] = [
       'Архитектурные решения',
     ],
     constructionTypes: ['Фасадное остекление', 'Витраж', 'Зимний сад', 'Атриум'],
-    imageUrl:
-      'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80&fit=crop',
+    imageUrl: '/products/facade-aluminum.jpg',
     imageAlt: 'Фасадное алюминиевое остекление — витражи и стеклянные фасады',
   },
 ];
