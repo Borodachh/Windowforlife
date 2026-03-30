@@ -28,11 +28,11 @@ function ProductCard({ product }: { product: Product }) {
   return (
     <motion.article variants={cardVariants} className="card flex flex-col overflow-hidden group">
       {/* Image */}
-      <div className="relative h-52 overflow-hidden bg-gray-100">
+      <div className="relative h-56 overflow-hidden bg-white">
         <img
           src={product.imageUrl}
           alt={product.imageAlt}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
         {product.badge && (
