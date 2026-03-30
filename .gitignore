@@ -19,9 +19,12 @@ logs/
 *.log
 npm-debug.log*
 
-# Editor
+# Editor / Notes
 .vscode/
 .idea/
+.obsidian/
+Изменения в калькуляторе.md
+specification_form_v2_deep.md
 *.suo
 *.ntvs*
 *.njsproj
