@@ -59,8 +59,8 @@ export const PRODUCT_SPECS: Record<string, ProductSpec> = {
     allowedConstructionTypes: ['Раздвижная система'],
     allowedSashTypes: ['Раздвижная'],
     requiresDimensions: true,
-    width: { min: 600, max: 6000 },
-    height: { min: 400, max: 1600 },
+    width: { min: 600, max: 3500 },
+    height: { min: 500, max: 2500 },
     sashCount: { min: 2, max: 4 },
   },
   'Provedal P400': {
@@ -69,7 +69,7 @@ export const PRODUCT_SPECS: Record<string, ProductSpec> = {
     allowedSashTypes: ['Глухая', 'Поворотная'],
     requiresDimensions: true,
     width: { min: 350, max: 3000 },
-    height: { min: 400, max: 2500 },
+    height: { min: 500, max: 2500 },
     sashCount: { min: 1, max: 4 },
   },
   'Фасадный алюминий': {
