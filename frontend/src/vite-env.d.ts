@@ -4,6 +4,7 @@ interface ImportMetaEnv {
   readonly VITE_YANDEX_METRIKA_ID: string;
   readonly VITE_YANDEX_MAPS_API_KEY: string;
   readonly VITE_COMPANY_PHONE: string;
+  readonly VITE_COMPANY_PHONE_2: string;
   readonly VITE_COMPANY_EMAIL: string;
   readonly VITE_COMPANY_WORK_HOURS: string;
   readonly VITE_COMPANY_ADDRESS: string;

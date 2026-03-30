@@ -21,6 +21,7 @@ const navLinks = [
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const phone = import.meta.env.VITE_COMPANY_PHONE || '';
+  const phone2 = import.meta.env.VITE_COMPANY_PHONE_2 || '';
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
@@ -111,9 +112,18 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 <a
                   href={`tel:${phone.replace(/[^\d+]/g, '')}`}
                   onClick={() => reachGoal('phone_clicked')}
-                  className="block text-center py-3 font-body font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+                  className="block text-center py-2 font-body font-semibold text-primary-600 hover:text-primary-700 transition-colors"
                 >
                   {phone}
+                </a>
+              )}
+              {phone2 && (
+                <a
+                  href={`tel:${phone2.replace(/[^\d+]/g, '')}`}
+                  onClick={() => reachGoal('phone_clicked')}
+                  className="block text-center py-2 font-body font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+                >
+                  {phone2}
                 </a>
               )}
               <Button variant="primary" size="md" onClick={handleOrderClick} className="w-full">

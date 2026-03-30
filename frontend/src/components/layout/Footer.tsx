@@ -16,6 +16,7 @@ const navLinks = [
 export function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const phone = import.meta.env.VITE_COMPANY_PHONE || '';
+  const phone2 = import.meta.env.VITE_COMPANY_PHONE_2 || '';
   const email = import.meta.env.VITE_COMPANY_EMAIL || '';
   const workHours = import.meta.env.VITE_COMPANY_WORK_HOURS || '';
   const address = import.meta.env.VITE_COMPANY_ADDRESS || '';
@@ -82,6 +83,16 @@ export function Footer() {
                   >
                     <Phone size={14} className="text-primary-400 shrink-0" />
                     {phone}
+                  </a>
+                )}
+                {phone2 && (
+                  <a
+                    href={`tel:${phone2.replace(/[^\d+]/g, '')}`}
+                    onClick={() => reachGoal('phone_clicked')}
+                    className="flex items-center gap-2.5 text-gray-300 hover:text-white font-body text-sm transition-colors"
+                  >
+                    <Phone size={14} className="text-primary-400 shrink-0" />
+                    {phone2}
                   </a>
                 )}
                 {email && (

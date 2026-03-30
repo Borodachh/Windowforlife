@@ -30,6 +30,7 @@ function YandexMap({ lat, lng }: { lat: string; lng: string }) {
 export function Contacts() {
   const [sectionRef, isInView] = useInView<HTMLElement>({ threshold: 0.08 });
   const phone = import.meta.env.VITE_COMPANY_PHONE;
+  const phone2 = import.meta.env.VITE_COMPANY_PHONE_2;
   const email = import.meta.env.VITE_COMPANY_EMAIL;
   const workHours = import.meta.env.VITE_COMPANY_WORK_HOURS;
   const address = import.meta.env.VITE_COMPANY_ADDRESS;
@@ -42,6 +43,13 @@ export function Contacts() {
       label: 'Телефон',
       value: phone,
       href: `tel:${phone.replace(/[^\d+]/g, '')}`,
+      onClick: () => reachGoal('phone_clicked'),
+    },
+    phone2 && {
+      icon: Phone,
+      label: 'Телефон 2',
+      value: phone2,
+      href: `tel:${phone2.replace(/[^\d+]/g, '')}`,
       onClick: () => reachGoal('phone_clicked'),
     },
     email && {
@@ -154,6 +162,16 @@ export function Contacts() {
               >
                 <Phone size={18} />
                 Позвонить: {phone}
+              </a>
+            )}
+            {phone2 && (
+              <a
+                href={`tel:${phone2.replace(/[^\d+]/g, '')}`}
+                onClick={() => reachGoal('phone_clicked')}
+                className="md:hidden flex items-center justify-center gap-2 py-4 rounded-2xl bg-primary-600 text-white font-body font-semibold text-base"
+              >
+                <Phone size={18} />
+                Позвонить: {phone2}
               </a>
             )}
           </motion.div>

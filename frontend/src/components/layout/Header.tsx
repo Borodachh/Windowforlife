@@ -19,6 +19,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const phone = import.meta.env.VITE_COMPANY_PHONE || '';
+  const phone2 = import.meta.env.VITE_COMPANY_PHONE_2 || '';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -82,19 +83,37 @@ export function Header() {
 
             {/* Right: phone + CTA */}
             <div className="hidden md:flex items-center gap-4">
-              {phone && (
-                <a
-                  href={`tel:${phone.replace(/[^\d+]/g, '')}`}
-                  onClick={() => reachGoal('phone_clicked')}
-                  className={[
-                    'flex items-center gap-1.5 font-body font-semibold text-sm',
-                    'transition-colors duration-200',
-                    scrolled ? 'text-gray-700 hover:text-primary-600' : 'text-white/90 hover:text-white',
-                  ].join(' ')}
-                >
-                  <Phone size={14} />
-                  {phone}
-                </a>
+              {(phone || phone2) && (
+                <div className="flex flex-col items-end gap-0.5">
+                  {phone && (
+                    <a
+                      href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                      onClick={() => reachGoal('phone_clicked')}
+                      className={[
+                        'flex items-center gap-1.5 font-body font-semibold text-sm',
+                        'transition-colors duration-200',
+                        scrolled ? 'text-gray-700 hover:text-primary-600' : 'text-white/90 hover:text-white',
+                      ].join(' ')}
+                    >
+                      <Phone size={14} />
+                      {phone}
+                    </a>
+                  )}
+                  {phone2 && (
+                    <a
+                      href={`tel:${phone2.replace(/[^\d+]/g, '')}`}
+                      onClick={() => reachGoal('phone_clicked')}
+                      className={[
+                        'flex items-center gap-1.5 font-body font-semibold text-sm',
+                        'transition-colors duration-200',
+                        scrolled ? 'text-gray-700 hover:text-primary-600' : 'text-white/90 hover:text-white',
+                      ].join(' ')}
+                    >
+                      <Phone size={14} />
+                      {phone2}
+                    </a>
+                  )}
+                </div>
               )}
               <Button variant="primary" size="sm" onClick={handleOrderClick}>
                 Заказать замер

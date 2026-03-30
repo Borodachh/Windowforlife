@@ -41,6 +41,7 @@ export function OrderForm() {
   const [formState, setFormState] = useState<FormState>('idle');
   const [sectionRef, isInView] = useInView<HTMLElement>({ threshold: 0.05 });
   const phone = import.meta.env.VITE_COMPANY_PHONE;
+  const phone2 = import.meta.env.VITE_COMPANY_PHONE_2;
   const { mutate, isPending } = useSubmitOrder();
 
   const {
@@ -156,6 +157,14 @@ export function OrderForm() {
                         <a href={`tel:${phone?.replace(/\s/g, '')}`} className="font-semibold underline">
                           {phone}
                         </a>
+                        {phone2 && (
+                          <>
+                            {' или '}
+                            <a href={`tel:${phone2.replace(/\s/g, '')}`} className="font-semibold underline">
+                              {phone2}
+                            </a>
+                          </>
+                        )}
                       </p>
                     </div>
                   </div>

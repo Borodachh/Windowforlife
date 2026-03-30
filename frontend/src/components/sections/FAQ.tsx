@@ -10,6 +10,7 @@ import { scrollToOrderForm, reachGoal } from '../../lib/analytics';
 export function FAQ() {
   const [sectionRef, isInView] = useInView<HTMLElement>({ threshold: 0.08 });
   const phone = import.meta.env.VITE_COMPANY_PHONE;
+  const phone2 = import.meta.env.VITE_COMPANY_PHONE_2;
 
   return (
     <section
@@ -52,6 +53,15 @@ export function FAQ() {
                 >
                   <MessageCircle size={15} />
                   Или позвоните: {phone}
+                </a>
+              )}
+              {phone2 && (
+                <a
+                  href={`tel:${phone2.replace(/[^\d+]/g, '')}`}
+                  onClick={() => reachGoal('phone_clicked')}
+                  className="flex items-center gap-2 text-gray-500 hover:text-primary-600 font-body text-sm transition-colors w-fit ml-5"
+                >
+                  {phone2}
                 </a>
               )}
             </motion.div>
