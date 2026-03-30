@@ -25,6 +25,7 @@ npm-debug.log*
 .obsidian/
 Изменения в калькуляторе.md
 specification_form_v2_deep.md
+specification_form_v2.md
 *.suo
 *.ntvs*
 *.njsproj

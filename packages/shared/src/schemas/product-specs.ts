@@ -8,6 +8,21 @@ export interface ProductSpec {
   sashCount?: { min: number; max: number };
 }
 
+/** Типы конструкций, в названии которых уже заложено количество створок */
+export const FIXED_SASH_COUNTS: Record<string, number> = {
+  'Одностворчатое окно': 1,
+  'Двухстворчатое окно': 2,
+  'Трёхстворчатое окно': 3,
+  'Четырёхстворчатое окно': 4,
+};
+
+/** Ограничения для типа «Дверь» (применяются во всех профилях) */
+export const DOOR_CONFIG = {
+  minSashes: 1,
+  maxSashes: 2,
+  allowedSashTypes: ['Поворотная'] as string[],
+};
+
 export const PRODUCT_SPECS: Record<string, ProductSpec> = {
   KBE: {
     category: 'pvc',
@@ -50,11 +65,11 @@ export const PRODUCT_SPECS: Record<string, ProductSpec> = {
   },
   'Provedal P400': {
     category: 'aluminum',
-    allowedConstructionTypes: ['Распашная система'],
+    allowedConstructionTypes: ['Дверь', 'Распашная система'],
     allowedSashTypes: ['Глухая', 'Поворотная'],
     requiresDimensions: true,
     width: { min: 350, max: 3000 },
-    height: { min: 400, max: 1600 },
+    height: { min: 400, max: 2500 },
     sashCount: { min: 1, max: 4 },
   },
   'Фасадный алюминий': {

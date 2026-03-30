@@ -1,6 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { env } from '../config/env';
-import { PRODUCT_SPECS } from '@windowforlife/shared';
+import { PRODUCT_SPECS, FIXED_SASH_COUNTS, DOOR_CONFIG } from '@windowforlife/shared';
 import type { OrderInput, ConstructionData } from '@windowforlife/shared';
 
 let bot: TelegramBot | null = null;
@@ -48,9 +48,13 @@ function formatConstruction(c: ConstructionData, index: number): string {
     if (c.width != null && c.height != null) {
       lines.push(`  📐 Размеры: ${c.width} × ${c.height} мм`);
     }
-    if (c.sashCount != null && c.sashTypes && c.sashTypes.length > 0) {
-      const types = c.sashTypes.map(escapeHtml).join(', ');
-      lines.push(`  🚪 Створки: ${c.sashCount} шт. (${types})`);
+    const isDoor = c.constructionType === 'Дверь';
+    const fixedCount = FIXED_SASH_COUNTS[c.constructionType];
+    const sashCount = fixedCount ?? c.sashCount;
+    const sashTypes = isDoor ? DOOR_CONFIG.allowedSashTypes : (c.sashTypes ?? []);
+    if (sashCount != null && sashTypes.length > 0) {
+      const types = sashTypes.map(escapeHtml).join(', ');
+      lines.push(`  🚪 Створки: ${sashCount} шт. (${types})`);
     }
   }
 

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { UseFormRegister, UseFormSetValue, Control, useWatch, FieldErrors } from 'react-hook-form';
 import { Trash2 } from 'lucide-react';
-import { PRODUCT_SPECS } from '@shared/schemas/product-specs';
+import { PRODUCT_SPECS, FIXED_SASH_COUNTS, DOOR_CONFIG } from '@shared/schemas/product-specs';
 import type { OrderData } from '@shared/schemas/order.schema';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
@@ -34,9 +34,17 @@ export function ConstructionBlock({
   canRemove,
 }: ConstructionBlockProps) {
   const profileSystem = useWatch({ control, name: `constructions.${index}.profileSystem` });
+  const constructionType = useWatch({ control, name: `constructions.${index}.constructionType` });
   const selectedSashTypes = useWatch({ control, name: `constructions.${index}.sashTypes` }) ?? [];
 
   const spec = profileSystem ? PRODUCT_SPECS[profileSystem] : null;
+  const isDoor = constructionType === 'Дверь';
+  const fixedCount = constructionType ? FIXED_SASH_COUNTS[constructionType] : undefined;
+  const hasSashCountField = fixedCount === undefined; // show field only when count is NOT fixed by type name
+
+  // Effective sash types: for doors — only Поворотная, otherwise from profile spec
+  const effectiveSashTypes = isDoor ? DOOR_CONFIG.allowedSashTypes : (spec?.allowedSashTypes ?? []);
+  const sashTypeOptions = effectiveSashTypes.map((t) => ({ value: t, label: t }));
 
   // Reset dependent fields when profile changes
   useEffect(() => {
@@ -49,15 +57,33 @@ export function ConstructionBlock({
     }
   }, [profileSystem, index, setValue]);
 
+  // Auto-set sash count when it's fixed by construction type name
+  useEffect(() => {
+    if (fixedCount !== undefined) {
+      setValue(`constructions.${index}.sashCount`, fixedCount);
+    } else {
+      setValue(`constructions.${index}.sashCount`, undefined);
+    }
+  }, [constructionType, fixedCount, index, setValue]);
+
+  // Auto-set sash types for doors (only Поворотная)
+  useEffect(() => {
+    if (isDoor) {
+      setValue(`constructions.${index}.sashTypes`, DOOR_CONFIG.allowedSashTypes as any);
+    } else if (constructionType) {
+      setValue(`constructions.${index}.sashTypes`, []);
+    }
+  }, [constructionType, isDoor, index, setValue]);
+
   const constructionErrors = errors.constructions?.[index];
 
   const constructionTypeOptions = spec
     ? spec.allowedConstructionTypes.map((t) => ({ value: t, label: t }))
     : [];
 
-  const sashTypeOptions = spec
-    ? spec.allowedSashTypes.map((t) => ({ value: t, label: t }))
-    : [];
+  // Sash count limits for the manual input
+  const sashCountMin = isDoor ? DOOR_CONFIG.minSashes : spec?.sashCount?.min;
+  const sashCountMax = isDoor ? DOOR_CONFIG.maxSashes : spec?.sashCount?.max;
 
   return (
     <div className="border border-gray-200 rounded-2xl p-4 md:p-6 relative">
@@ -121,24 +147,28 @@ export function ConstructionBlock({
                 setValueAs: (v: string) => (v === '' ? undefined : Number(v)),
               })}
             />
-            <Input
-              label="Количество створок"
-              type="number"
-              min={spec.sashCount?.min}
-              max={spec.sashCount?.max}
-              placeholder={spec.sashCount ? `${spec.sashCount.min}–${spec.sashCount.max}` : ''}
-              error={constructionErrors?.sashCount?.message}
-              required
-              {...register(`constructions.${index}.sashCount`, {
-                setValueAs: (v: string) => (v === '' ? undefined : Number(v)),
-              })}
-            />
+
+            {/* Sash count: show only when NOT fixed by construction type name */}
+            {hasSashCountField && constructionType && (
+              <Input
+                label="Количество створок"
+                type="number"
+                min={sashCountMin}
+                max={sashCountMax}
+                placeholder={sashCountMin && sashCountMax ? `${sashCountMin}–${sashCountMax}` : ''}
+                error={constructionErrors?.sashCount?.message}
+                required
+                {...register(`constructions.${index}.sashCount`, {
+                  setValueAs: (v: string) => (v === '' ? undefined : Number(v)),
+                })}
+              />
+            )}
           </>
         )}
       </div>
 
-      {/* Sash types checkboxes */}
-      {spec?.requiresDimensions && sashTypeOptions.length > 0 && (
+      {/* Sash types checkboxes — show only when dimensions required, not a door, and there are options */}
+      {spec?.requiresDimensions && !isDoor && sashTypeOptions.length > 0 && constructionType && (
         <div className="mt-4">
           <p className="text-sm font-medium text-gray-700 font-body mb-2">
             Тип створок <span className="text-red-500" aria-hidden="true">*</span>
@@ -174,6 +204,13 @@ export function ConstructionBlock({
             </p>
           )}
         </div>
+      )}
+
+      {/* Door indicator — sash type is auto-set */}
+      {spec?.requiresDimensions && isDoor && (
+        <p className="mt-3 text-sm text-gray-500 font-body">
+          Тип створок: <span className="font-medium text-gray-700">Поворотная</span> (устанавливается автоматически)
+        </p>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PRODUCT_SPECS } from './product-specs';
+import { PRODUCT_SPECS, FIXED_SASH_COUNTS, DOOR_CONFIG } from './product-specs';
 
 export const constructionTypeEnum = z.enum([
   'Дверь',
@@ -53,6 +53,9 @@ export const constructionSchema = z
 
     if (!spec.requiresDimensions) return;
 
+    const isDoor = data.constructionType === 'Дверь';
+    const fixedCount = FIXED_SASH_COUNTS[data.constructionType];
+
     // Width required & in range
     if (data.width == null) {
       ctx.addIssue({
@@ -83,34 +86,68 @@ export const constructionSchema = z
       });
     }
 
-    // Sash count required & in range
-    if (data.sashCount == null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Укажите количество створок',
-        path: ['sashCount'],
-      });
-    } else if (spec.sashCount && (data.sashCount < spec.sashCount.min || data.sashCount > spec.sashCount.max)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Створки: от ${spec.sashCount.min} до ${spec.sashCount.max}`,
-        path: ['sashCount'],
-      });
+    // Sash count validation
+    if (fixedCount !== undefined) {
+      // Fixed sash count from construction type name — accept matching value or undefined
+      if (data.sashCount != null && data.sashCount !== fixedCount) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Для «${data.constructionType}» количество створок: ${fixedCount}`,
+          path: ['sashCount'],
+        });
+      }
+    } else if (isDoor) {
+      // Door: 1–2 sashes
+      if (data.sashCount == null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Укажите количество створок',
+          path: ['sashCount'],
+        });
+      } else if (data.sashCount < DOOR_CONFIG.minSashes || data.sashCount > DOOR_CONFIG.maxSashes) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Для двери: от ${DOOR_CONFIG.minSashes} до ${DOOR_CONFIG.maxSashes} створок`,
+          path: ['sashCount'],
+        });
+      }
+    } else {
+      // General case — use profile spec range
+      if (data.sashCount == null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Укажите количество створок',
+          path: ['sashCount'],
+        });
+      } else if (spec.sashCount && (data.sashCount < spec.sashCount.min || data.sashCount > spec.sashCount.max)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Створки: от ${spec.sashCount.min} до ${spec.sashCount.max}`,
+          path: ['sashCount'],
+        });
+      }
     }
 
-    // Sash types required & must be allowed
+    // Sash types validation
+    const effectiveSashTypes = isDoor ? DOOR_CONFIG.allowedSashTypes : spec.allowedSashTypes;
+
     if (!data.sashTypes || data.sashTypes.length === 0) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Выберите хотя бы один тип створки',
-        path: ['sashTypes'],
-      });
+      // For fixed sash types (door with single option), accept undefined
+      if (isDoor) {
+        // OK — frontend auto-sets, backend can default
+      } else {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Выберите хотя бы один тип створки',
+          path: ['sashTypes'],
+        });
+      }
     } else {
       for (const st of data.sashTypes) {
-        if (!spec.allowedSashTypes.includes(st)) {
+        if (!effectiveSashTypes.includes(st)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: `Тип створки «${st}» недоступен для профиля «${data.profileSystem}»`,
+            message: `Тип створки «${st}» недоступен для ${isDoor ? 'двери' : `профиля «${data.profileSystem}»`}`,
             path: ['sashTypes'],
           });
         }
