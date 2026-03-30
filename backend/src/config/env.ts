@@ -1,8 +1,11 @@
 import path from 'path';
 import dotenv from 'dotenv';
 
-// Загружаем .env из корня монорепо (process.cwd() — корень, откуда запущен процесс)
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+// Загружаем .env из корня монорепо
+// Пробуем cwd (корень при запуске из корня) и ../cwd (если cwd = backend/)
+const envPath = path.resolve(process.cwd(), '.env');
+const envPathParent = path.resolve(process.cwd(), '..', '.env');
+dotenv.config({ path: require('fs').existsSync(envPath) ? envPath : envPathParent });
 import { z } from 'zod';
 
 const envSchema = z.object({
