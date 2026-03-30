@@ -32,11 +32,12 @@ cp .env.example .env
 ### Запуск
 
 ```bash
-# Frontend (localhost:5173)
-npm run dev:frontend
+# Оба сервера одновременно (frontend :5173 + backend :3001)
+npm run dev
 
-# Backend (localhost:3001)
-npm run dev:backend
+# Или по отдельности:
+npm run dev:frontend    # Frontend (localhost:5173)
+npm run dev:backend     # Backend (localhost:3001)
 ```
 
 В dev-режиме запросы `/api/*` с фронтенда проксируются на порт 3001 через Vite.
