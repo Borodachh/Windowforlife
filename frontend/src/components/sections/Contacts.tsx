@@ -146,7 +146,7 @@ export function Contacts() {
                 variant="secondary"
                 size="md"
                 onClick={() => { scrollToOrderForm(); reachGoal('order_form_opened'); }}
-                className="bg-white text-primary-700 hover:bg-white/90 w-full justify-center"
+                className="bg-white !text-primary-700 hover:bg-white/90 w-full justify-center"
               >
                 Заказать замер
                 <ArrowRight size={16} />

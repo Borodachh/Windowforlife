@@ -67,7 +67,7 @@ export function Gallery() {
               <button
                 onClick={() => setLightboxIndex(index)}
                 className="group relative block w-full rounded-2xl overflow-hidden aspect-[4/3] bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-                aria-label={`Открыть фото: ${item.caption}`}
+                aria-label={`Открыть фото: ${item.alt}`}
               >
                 <img
                   src={item.src}
@@ -81,10 +81,6 @@ export function Gallery() {
                     size={36}
                     className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg"
                   />
-                </div>
-                {/* Caption */}
-                <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-black/70 to-transparent">
-                  <p className="text-white text-sm font-medium font-body">{item.caption}</p>
                 </div>
               </button>
             </SwiperSlide>
