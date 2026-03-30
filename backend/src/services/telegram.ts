@@ -1,6 +1,7 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { env } from '../config/env';
-import type { OrderInput } from '@windowforlife/shared';
+import { PRODUCT_SPECS } from '@windowforlife/shared';
+import type { OrderInput, ConstructionData } from '@windowforlife/shared';
 
 let bot: TelegramBot | null = null;
 
@@ -35,8 +36,32 @@ function formatDate(): string {
   return `${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}:${p.second} MSK`;
 }
 
+function formatConstruction(c: ConstructionData, index: number): string {
+  const spec = PRODUCT_SPECS[c.profileSystem];
+  const lines: string[] = [
+    `📦 <b>Конструкция ${index + 1}:</b>`,
+    `  🏭 Профиль: ${escapeHtml(c.profileSystem)}`,
+    `  📋 Тип: ${escapeHtml(c.constructionType)}`,
+  ];
+
+  if (spec?.requiresDimensions) {
+    if (c.width != null && c.height != null) {
+      lines.push(`  📐 Размеры: ${c.width} × ${c.height} мм`);
+    }
+    if (c.sashCount != null && c.sashTypes && c.sashTypes.length > 0) {
+      const types = c.sashTypes.map(escapeHtml).join(', ');
+      lines.push(`  🚪 Створки: ${c.sashCount} шт. (${types})`);
+    }
+  }
+
+  return lines.join('\n');
+}
+
 function formatMessage(order: OrderInput): string {
-  const sashTypes = order.sashTypes.map(escapeHtml).join(', ');
+  const constructionBlocks = order.constructions
+    .map((c, i) => formatConstruction(c, i))
+    .join('\n\n');
+
   const comment = order.comment
     ? `\n💬 <b>Комментарий:</b> ${escapeHtml(order.comment)}`
     : '';
@@ -44,10 +69,7 @@ function formatMessage(order: OrderInput): string {
   return [
     '🪟 <b>Новая заявка с сайта WindowForLife</b>',
     '',
-    `📋 <b>Тип конструкции:</b> ${escapeHtml(order.constructionType)}`,
-    `🏭 <b>Профильная система:</b> ${escapeHtml(order.profileSystem)}`,
-    `📐 <b>Размеры:</b> ${order.width} × ${order.height} мм`,
-    `🚪 <b>Створки:</b> ${order.sashCount} шт. (${sashTypes})`,
+    constructionBlocks,
     '',
     `👤 <b>Клиент:</b> ${escapeHtml(order.firstName)} ${escapeHtml(order.lastName)}`,
     `📞 <b>Телефон:</b> ${escapeHtml(order.phone)}`,

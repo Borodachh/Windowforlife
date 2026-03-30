@@ -1,1 +1,1 @@
-export type { OrderData, OrderInput } from '../schemas/order.schema';
+export type { OrderData, OrderInput, ConstructionData } from '../schemas/order.schema';

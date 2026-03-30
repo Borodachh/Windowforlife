@@ -1,41 +1,20 @@
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Plus } from 'lucide-react';
 import InputMask from 'react-input-mask';
 import { orderSchema } from '@shared/schemas/order.schema';
 import type { OrderData } from '@shared/schemas/order.schema';
 import { Input } from '../ui/Input';
-import { Select } from '../ui/Select';
 import { Button } from '../ui/Button';
-import { AnimatedSectionHeading } from '../ui/SectionHeading';
 import { useInView } from '../../hooks/useInView';
 import { useSubmitOrder } from '../../hooks/useSubmitOrder';
+import { ConstructionBlock } from './ConstructionBlock';
 
 type FormState = 'idle' | 'success' | 'error';
 
-const CONSTRUCTION_TYPES = [
-  { value: 'Балконный блок', label: 'Балконный блок' },
-  { value: 'Одностворчатое окно', label: 'Одностворчатое окно' },
-  { value: 'Двухстворчатое окно', label: 'Двухстворчатое окно' },
-  { value: 'Трёхстворчатое окно', label: 'Трёхстворчатое окно' },
-];
-
-const PROFILE_SYSTEMS = [
-  { value: 'Knipping', label: 'Knipping (Премиум)' },
-  { value: 'KBE', label: 'KBE (Оптимальный)' },
-  { value: 'Provedal C640', label: 'Provedal C640 (Раздвижная)' },
-  { value: 'Provedal P400', label: 'Provedal P400 (Распашная)' },
-  { value: 'Фасадный алюминий', label: 'Фасадный алюминий' },
-];
-
-const SASH_TYPES = [
-  { value: 'Глухая', label: 'Глухая' },
-  { value: 'Поворотная', label: 'Поворотная' },
-  { value: 'Поворотно-откидная', label: 'Поворотно-откидная' },
-  { value: 'Раздвижная', label: 'Раздвижная' },
-] as const;
+const MAX_CONSTRUCTIONS = 5;
 
 export function OrderForm() {
   const [formState, setFormState] = useState<FormState>('idle');
@@ -48,18 +27,21 @@ export function OrderForm() {
     register,
     handleSubmit,
     control,
-    watch,
+    setValue,
     formState: { errors },
     reset,
   } = useForm<OrderData>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
-      sashTypes: [],
+      constructions: [{}] as any,
       consent: false,
     },
   });
 
-  const selectedSashTypes = watch('sashTypes') ?? [];
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'constructions',
+  });
 
   const onSubmit = (data: OrderData) => {
     const { consent: _consent, ...orderInput } = data;
@@ -170,96 +152,38 @@ export function OrderForm() {
                   </div>
                 )}
 
-                {/* Section: Construction details */}
-                <div>
-                  <p className="font-heading font-semibold text-gray-900 text-sm uppercase tracking-wider mb-4">
-                    Параметры конструкции
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Select
-                      label="Тип конструкции"
-                      options={CONSTRUCTION_TYPES}
-                      error={errors.constructionType?.message}
-                      required
-                      {...register('constructionType')}
+                {/* Construction blocks */}
+                <div className="flex flex-col gap-4">
+                  {fields.map((field, index) => (
+                    <ConstructionBlock
+                      key={field.id}
+                      index={index}
+                      control={control}
+                      register={register}
+                      errors={errors}
+                      setValue={setValue}
+                      remove={remove}
+                      canRemove={fields.length > 1}
                     />
-                    <Select
-                      label="Профильная система"
-                      options={PROFILE_SYSTEMS}
-                      error={errors.profileSystem?.message}
-                      required
-                      {...register('profileSystem')}
-                    />
-                    <Input
-                      label="Ширина (мм)"
-                      type="number"
-                      min={300}
-                      max={5000}
-                      placeholder="Например: 1400"
-                      error={errors.width?.message}
-                      required
-                      {...register('width', { valueAsNumber: true })}
-                    />
-                    <Input
-                      label="Высота (мм)"
-                      type="number"
-                      min={300}
-                      max={3000}
-                      placeholder="Например: 1300"
-                      error={errors.height?.message}
-                      required
-                      {...register('height', { valueAsNumber: true })}
-                    />
-                    <Input
-                      label="Количество створок"
-                      type="number"
-                      min={1}
-                      max={6}
-                      placeholder="Например: 2"
-                      error={errors.sashCount?.message}
-                      required
-                      {...register('sashCount', { valueAsNumber: true })}
-                    />
-                  </div>
-                </div>
+                  ))}
 
-                {/* Sash types checkboxes */}
-                <div>
-                  <p className="text-sm font-medium text-gray-700 font-body mb-2">
-                    Тип створок{' '}
-                    <span className="text-red-500" aria-hidden="true">*</span>
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    {SASH_TYPES.map((type) => {
-                      const isChecked = selectedSashTypes.includes(type.value);
-                      return (
-                        <label
-                          key={type.value}
-                          className={[
-                            'flex items-center gap-2 px-4 py-2.5 rounded-xl border cursor-pointer',
-                            'font-body text-sm transition-all duration-200',
-                            isChecked
-                              ? 'border-primary-500 bg-primary-50 text-primary-700'
-                              : 'border-gray-200 text-gray-600 hover:border-gray-300',
-                          ].join(' ')}
-                        >
-                          <input
-                            type="checkbox"
-                            value={type.value}
-                            className="accent-primary-600"
-                            {...register('sashTypes')}
-                          />
-                          {type.label}
-                        </label>
-                      );
-                    })}
-                  </div>
-                  {errors.sashTypes && (
-                    <p className="text-xs text-red-500 font-body mt-1.5" role="alert">
-                      {errors.sashTypes.message}
-                    </p>
+                  {fields.length < MAX_CONSTRUCTIONS && (
+                    <button
+                      type="button"
+                      onClick={() => append({} as any)}
+                      className="flex items-center justify-center gap-2 w-full py-3 border-2 border-dashed border-gray-300 rounded-2xl text-gray-500 hover:border-primary-400 hover:text-primary-600 transition-colors font-body text-sm"
+                    >
+                      <Plus size={18} />
+                      Добавить конструкцию
+                    </button>
                   )}
                 </div>
+
+                {errors.constructions?.message && (
+                  <p className="text-xs text-red-500 font-body" role="alert">
+                    {errors.constructions.message}
+                  </p>
+                )}
 
                 {/* Section: Contact info */}
                 <div>
