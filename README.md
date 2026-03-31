@@ -155,6 +155,31 @@ curl https://windowforlife.ru/api/health
 
 ## Обновление сайта
 
+### Автоматически (CI/CD)
+
+При пуше в ветку `master` GitHub Actions автоматически деплоит изменения на VPS:
+
+1. Подключается к серверу по SSH
+2. Выполняет `git pull`, `npm install`, `npm run build`
+3. Перезапускает PM2
+
+Для настройки добавьте секреты в **GitHub → Settings → Secrets and variables → Actions**:
+
+| Секрет | Значение |
+|--------|----------|
+| `VPS_HOST` | IP-адрес VPS |
+| `VPS_USER` | `root` |
+| `VPS_SSH_KEY` | Приватный SSH-ключ для деплоя |
+
+Генерация ключа на сервере:
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/deploy_key -N ""
+cat ~/.ssh/deploy_key.pub >> ~/.ssh/authorized_keys
+cat ~/.ssh/deploy_key   # скопируйте в секрет VPS_SSH_KEY
+```
+
+### Вручную
+
 ```bash
 cd /var/www/windowforlife
 git pull
